@@ -144,6 +144,7 @@ ROR (register)                | Rotate Right (register): an alias of RORV
 RORV                          | Rotate Right Variable
 SBC                           | Subtract with Carry
 SBCS                          | Subtract with Carry, setting flags
+SBFIZ                         | Signed Bitfield Insert in Zeros
 SBFX                          | Signed Bitfield Extract: an alias of SBFM
 SDIV                          | Signed Divide
 SMADDL                        | Signed Multiply-Add Long
@@ -325,6 +326,7 @@ namespace triton {
             case ID_INS_REV:       this->rev_s(inst);           break;
             case ID_INS_ROR:       this->ror_s(inst);           break;
             case ID_INS_SBC:       this->sbc_s(inst);           break;
+            case ID_INS_SBFIZ:     this->sbfiz_s(inst);         break;
             case ID_INS_SBFX:      this->sbfx_s(inst);          break;
             case ID_INS_SDIV:      this->sdiv_s(inst);          break;
             case ID_INS_SMADDL:    this->smaddl_s(inst);        break;
@@ -4552,6 +4554,38 @@ namespace triton {
             this->vfSub_s(inst, expr, src1, op1, op2);
             this->zf_s(inst, expr, src1);
           }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::sbfiz_s(triton::arch::Instruction& inst) {
+          auto& dst   = inst.operands[0];
+          auto& src1  = inst.operands[1];
+          auto& src2  = inst.operands[2];
+          auto& src3  = inst.operands[3];
+          auto  lsb   = static_cast<uint32>(src2.getImmediate().getValue());
+          auto  width = static_cast<uint32>(src3.getImmediate().getValue());
+
+          if (lsb + width > dst.getBitSize())
+            throw triton::exceptions::Semantics("AArch64Semantics::sbfiz_s(): Invalid lsb and width.");
+
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src1);
+          auto lsb_op = this->symbolicEngine->getOperandAst(inst, src2);
+
+          /* Create the semantics */
+          auto node = this->astCtxt->bvshl(
+            this->astCtxt->sx(dst.getBitSize() - width, this->astCtxt->extract(width-1, 0, op)),
+            this->astCtxt->zx(dst.getBitSize() - lsb_op->getBitvectorSize(), lsb_op)
+          );
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SBFIZ operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
