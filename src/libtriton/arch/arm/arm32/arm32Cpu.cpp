@@ -278,13 +278,14 @@ namespace triton {
             inst.setSize(insn[0].size);
 
             /* Init the instruction's type */
-            inst.setType(this->capstoneInstructionToTritonInstruction(insn[0].id));
+            triton::uint64 insn_id = insn[0].is_alias ? insn[0].alias_id : insn[0].id;
+            inst.setType(this->capstoneInstructionToTritonInstruction(insn_id, insn[0].is_alias));
 
             /* Init the instruction's code codition */
             inst.setCodeCondition(this->capstoneConditionToTritonCondition(detail->arm.cc));
 
             /* Init the instruction's write back flag */
-            inst.setWriteBack(detail->arm.writeback);
+            inst.setWriteBack(detail->writeback);
 
             /* Set True if the instruction udpate flags */
             inst.setUpdateFlag(detail->arm.update_flags);
@@ -397,12 +398,6 @@ namespace triton {
                     case triton::arch::arm::ID_SHIFT_ROR_REG:
                       index.setShiftValue(this->capstoneRegisterToTritonRegister(op->shift.value));
                       break;
-                    case triton::arch::arm::ID_SHIFT_RRX_REG:
-                      /* NOTE: Capstone considers this as a viable shift operand
-                       * but according to the ARM manual this is not possible.
-                       */
-                      throw triton::exceptions::Disassembly("Arm32Cpu::disassembly(): Invalid shift type.");
-                      break;
                     default:
                       throw triton::exceptions::Disassembly("Arm32Cpu::disassembly(): Invalid shift type.");
                   }
@@ -479,12 +474,6 @@ namespace triton {
                     case triton::arch::arm::ID_SHIFT_LSR_REG:
                     case triton::arch::arm::ID_SHIFT_ROR_REG:
                       reg.setShiftValue(this->capstoneRegisterToTritonRegister(op->shift.value));
-                      break;
-                    case triton::arch::arm::ID_SHIFT_RRX_REG:
-                      /* NOTE: Capstone considers this as a viable shift operand
-                       * but according to the ARM manual this is not possible.
-                       */
-                      throw triton::exceptions::Disassembly("Arm32Cpu::disassembly(): Invalid shift type.");
                       break;
                     default:
                       throw triton::exceptions::Disassembly("Arm32Cpu::disassembly(): Invalid shift type.");

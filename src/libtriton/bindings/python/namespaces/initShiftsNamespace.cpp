@@ -55,9 +55,6 @@ Logical Shift Right operand.
 - **SHIFT.ARM.ROR_REG**<br>
 Rotate Right operand.
 
-- **SHIFT.ARM.RRX_REG**<br>
-Rotate Right with Extend operand.
-
 */
 
 
@@ -81,7 +78,6 @@ namespace triton {
         xPyDict_SetItemString(armShiftsDict, "LSL_REG", PyLong_FromUint32(triton::arch::arm::ID_SHIFT_LSL_REG));
         xPyDict_SetItemString(armShiftsDict, "LSR_REG", PyLong_FromUint32(triton::arch::arm::ID_SHIFT_LSR_REG));
         xPyDict_SetItemString(armShiftsDict, "ROR_REG", PyLong_FromUint32(triton::arch::arm::ID_SHIFT_ROR_REG));
-        xPyDict_SetItemString(armShiftsDict, "RRX_REG", PyLong_FromUint32(triton::arch::arm::ID_SHIFT_RRX_REG));
 
         PyObject* armShiftsDictClass = xPyClass_New(nullptr, armShiftsDict, xPyString_FromString("ARM"));
         xPyDict_SetItemString(shiftsDict, "ARM", armShiftsDictClass);

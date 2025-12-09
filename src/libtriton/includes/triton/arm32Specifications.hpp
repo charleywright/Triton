@@ -71,7 +71,7 @@ namespace triton {
             TRITON_EXPORT triton::arch::arm::condition_e capstoneConditionToTritonCondition(triton::uint32 id) const;
 
             //! Converts a capstone's instruction id to a triton's instruction id.
-            TRITON_EXPORT triton::uint32 capstoneInstructionToTritonInstruction(triton::uint32 id) const;
+            TRITON_EXPORT triton::uint32 capstoneInstructionToTritonInstruction(uint64 id, bool is_alias) const;
 
             //! Returns memory access size if it is specified by instruction.
             TRITON_EXPORT triton::uint32 getMemoryOperandSpecialSize(triton::uint32 id) const;

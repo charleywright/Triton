@@ -779,12 +779,6 @@ namespace triton {
                       )
                     );
 
-          case triton::arch::arm::ID_SHIFT_RRX_REG:
-            /* NOTE: Capstone considers this as a viable shift operand but
-             * according to the ARM manual this is not possible.
-             */
-            throw triton::exceptions::SymbolicEngine("SymbolicEngine::getShiftAst(): ID_SHIFT_RRX_REG is an invalid shift operand.");
-
           default:
             throw triton::exceptions::SymbolicEngine("SymbolicEngine::getShiftAst(): Invalid shift operand.");
         }

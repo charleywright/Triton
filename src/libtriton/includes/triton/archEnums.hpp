@@ -144,7 +144,6 @@ namespace triton {
         ID_SHIFT_LSL_REG,     //!< Logical Shift Left (register)
         ID_SHIFT_LSR_REG,     //!< Logical Shift Right (register)
         ID_SHIFT_ROR_REG,     //!< Rotate Right (register)
-        ID_SHIFT_RRX_REG,     //!< Rotate Right with Extend (register)
         ID_SHIFT_LAST_ITEM,   //!< Must be the last item
       };
 

@@ -5166,12 +5166,6 @@ namespace triton {
               type = triton::arch::arm::ID_SHIFT_ROR;
               break;
 
-            case triton::arch::arm::ID_SHIFT_RRX_REG:
-              /* NOTE: Capstone considers this as a viable shift operand but
-               * according to the ARM manual this is not possible.
-               */
-              throw triton::exceptions::Semantics("Arm32Semantics::getShiftCBasicType(): ID_SHIFT_RRX_REG is an invalid shift operand.");
-
             default:
               throw triton::exceptions::Semantics("Arm32Semantics::getShiftCBasicType(): Invalid shift operand.");
           }
@@ -5211,12 +5205,6 @@ namespace triton {
             case triton::arch::arm::ID_SHIFT_ROR_REG:
               amount = regShiftAmount;
               break;
-
-            case triton::arch::arm::ID_SHIFT_RRX_REG:
-              /* NOTE: Capstone considers this as a viable shift operand but
-               * according to the ARM manual this is not possible.
-               */
-              throw triton::exceptions::Semantics("Arm32Semantics::getShiftCAmountAst(): ID_SHIFT_RRX_REG is an invalid shift operand.");
 
             default:
               throw triton::exceptions::Semantics("Arm32Semantics::getShiftCAmountAst(): Invalid shift operand.");
